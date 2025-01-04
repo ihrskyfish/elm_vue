@@ -7,8 +7,6 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
-    BusinessInfo: typeof import('./src/components/BusinessInfo.vue')['default']
-    BusinessList: typeof import('./src/components/BusinessList.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCol: typeof import('element-plus/es')['ElCol']
     ElDescriptions: typeof import('element-plus/es')['ElDescriptions']
@@ -27,6 +25,8 @@ declare module 'vue' {
     ElTree: typeof import('element-plus/es')['ElTree']
     HomePage: typeof import('./src/components/HomePage.vue')['default']
     Login: typeof import('./src/components/Login.vue')['default']
+    MerchantInfo: typeof import('./src/components/MerchantInfo.vue')['default']
+    MerchantList: typeof import('./src/components/MerchantList.vue')['default']
     Navi: typeof import('./src/components/Navi.vue')['default']
     Order: typeof import('./src/components/Order.vue')['default']
     OrderList: typeof import('./src/components/OrderList.vue')['default']

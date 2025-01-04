@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import {useRoute,} from "vue-router";
-import {getToken} from "@/authService";
+import { useRoute, } from "vue-router";
+import { getToken } from "@/authService";
 import axios from 'axios';
-import {onMounted, ref} from "vue";
+import { onMounted, ref } from "vue";
 import router from "@/router";
 
 const route = useRoute();
@@ -16,12 +16,12 @@ const togglePayment = (payment: string) => {
   selectedPayment.value = payment;
 };
 
-interface BusinessVo {
-  businessAddress: string;
-  businessExplain: string;
-  businessId: number;
-  businessImg: string;
-  businessName: string;
+interface MerchantVo {
+  merchantAddress: string;
+  merchantExplain: string;
+  merchantId: number;
+  merchantImg: string;
+  merchantName: string;
   deliveryPrice: number;
   orderQuantity: number;
   orderTypeId: number;
@@ -30,7 +30,7 @@ interface BusinessVo {
 }
 
 interface FoodVo {
-  businessId: number;
+  merchantId: number;
   foodExplain: string;
   foodId: number;
   foodImg: string;
@@ -48,8 +48,8 @@ interface OrderDetailetVo {
 }
 
 interface OrdersVo {
-  businessId: number;
-  businessVo: BusinessVo | null;
+  merchantId: number;
+  merchantVo: MerchantVo | null;
   daId: number;
   list: OrderDetailetVo[];
   orderDate: string;
@@ -75,9 +75,9 @@ const getOrdersById = async (orderId: number) => {
     throw error;
   }
 };
-const getBusinessById = async (businessId: number) => {
+const getMerchantById = async (merchantId: number) => {
   try {
-    const response = await axios.get(`/api/business/businesses/${businessId}`, {
+    const response = await axios.get(`/api/merchant/merchantes/${merchantId}`, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         'token': getToken(),
@@ -86,14 +86,14 @@ const getBusinessById = async (businessId: number) => {
 
     return response.data;
   } catch (error) {
-    console.error('Error fetching business:', error);
+    console.error('Error fetching merchant:', error);
     throw error;
   }
 };
 const fetchOrderDetails = async (orderId: number) => {
   try {
     const response = await axios.get('/api/orders/listsDetailet', {
-      params: {orderId},
+      params: { orderId },
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         'token': getToken(),
@@ -112,16 +112,16 @@ const fetchAndFillOrdersData = async () => {
     const ordersResponse = await getOrdersById(Number(orderId));
     // console.log('ordersResponse:', ordersResponse);
     if (ordersResponse.code === 200) {
-      // 填充 businessVo 和订单详细信息
+      // 填充 merchantVo 和订单详细信息
       let order = ordersResponse.data;
-      let businessInfo = order.businessVo;
+      let merchantInfo = order.merchantVo;
       let orderDetailsInfo = [];
 
-      // 如果 businessVo 为 null，则通过 businessId 获取 businessVo
-      if (businessInfo === null && order.businessId) {
-        const businessResponse = await getBusinessById(order.businessId);
-        if (businessResponse.code === 200 && businessResponse.data) {
-          businessInfo = businessResponse.data;
+      // 如果 merchantVo 为 null，则通过 merchantId 获取 merchantVo
+      if (merchantInfo === null && order.merchantId) {
+        const merchantResponse = await getMerchantById(order.merchantId);
+        if (merchantResponse.code === 200 && merchantResponse.data) {
+          merchantInfo = merchantResponse.data;
         }
       }
 
@@ -131,7 +131,7 @@ const fetchAndFillOrdersData = async () => {
         orderDetailsInfo = orderDetailsResponse.data;
       }
       // console.log('orders:', orders);
-      orders.value = [{...order, businessVo: businessInfo, list: orderDetailsInfo, show: false}];
+      orders.value = [{ ...order, merchantVo: merchantInfo, list: orderDetailsInfo, show: false }];
     }
   } catch (error) {
     console.error('Error fetching and filling orders data:', error);
@@ -144,7 +144,7 @@ const toggleOrderDetails = (orderId: number) => {
   orders.value = orders.value.map(order => {
     if (order.orderId === orderId) {
       // console.log('order:', order);
-      return {...order, show: !order.show};
+      return { ...order, show: !order.show };
     }
     return order;
   });
@@ -188,83 +188,81 @@ onMounted(fetchAndFillOrdersData);
 </script>
 
 <template>
+
   <body>
-  <div class="w-full h-full">
+    <div class="w-full h-full">
 
-    <!--header部分-->
-    <header
+      <!--header部分-->
+      <header
         class="w-full h-24 bg-[#0097FFFF] text-white text-4xl fixed left-0 top-0 z-50 flex justify-center items-center">
-      <p class="">在线支付</p>
-    </header>
+        <p class="">在线支付</p>
+      </header>
 
-    <!--订单列表部分-->
-    <h3 class=" mt-24 box-border p-[4vw] text-3xl font-light text-[#999999FF]">未支付订单信息：</h3>
-    <ul class="w-full">
-      <li v-for="order in orders" :key="order.orderId" class="w-full text-3xl">
-        <div v-if="order.orderState===0"
-             class="box-border py-[2vw] px-[4vw] text-[#666666FF] flex justify-between items-center">
-          <p class="flex flex-row justify-between items-center">
-            {{ order.businessVo ? order.businessVo.businessName : '' }}
-            <svg class="fa-caret-down" height="20" viewBox="0 0 32 32"
-                 width="20" xmlns="http://www.w3.org/2000/svg"
-                 @click="toggleOrderDetails(order.orderId)">
-              <path d="m24 12l-8 10l-8-10z" fill="currentColor"/>
-            </svg>
-          </p>
-          <div class="flex">
-            <p class="">&#165;{{ order.orderTotal + (order.businessVo?.deliveryPrice || 0) }}</p>
-            <RouterLink :to="`/payment/${order.orderId}`" class="block w-full h-full">
-              <button class="bg-[#FF9900FF] text-white rounded-[3px] ml-4 select-none cursor-pointer">待支付
-              </button>
-            </RouterLink>
+      <!--订单列表部分-->
+      <h3 class=" mt-24 box-border p-[4vw] text-3xl font-light text-[#999999FF]">未支付订单信息：</h3>
+      <ul class="w-full">
+        <li v-for="order in orders" :key="order.orderId" class="w-full text-3xl">
+          <div v-if="order.orderState === 0"
+            class="box-border py-[2vw] px-[4vw] text-[#666666FF] flex justify-between items-center">
+            <p class="flex flex-row justify-between items-center">
+              {{ order.merchantVo ? order.merchantVo.merchantName : '' }}
+              <svg class="fa-caret-down" height="20" viewBox="0 0 32 32" width="20" xmlns="http://www.w3.org/2000/svg"
+                @click="toggleOrderDetails(order.orderId)">
+                <path d="m24 12l-8 10l-8-10z" fill="currentColor" />
+              </svg>
+            </p>
+            <div class="flex">
+              <p class="">&#165;{{ order.orderTotal + (order.merchantVo?.deliveryPrice || 0) }}</p>
+              <RouterLink :to="`/payment/${order.orderId}`" class="block w-full h-full">
+                <button class="bg-[#FF9900FF] text-white rounded-[3px] ml-4 select-none cursor-pointer">待支付
+                </button>
+              </RouterLink>
+            </div>
           </div>
-        </div>
-        <ul v-if="order.orderState===0" v-show="order.show" class="w-full order-detailet">
-          <li v-for="detail in order.list" :key="detail.odId"
+          <ul v-if="order.orderState === 0" v-show="order.show" class="w-full order-detailet">
+            <li v-for="detail in order.list" :key="detail.odId"
               class="w-full box-border py-[1vw] px-[4vw] text-[#666666FF] text-xl flex justify-between items-center">
-            <p class="">{{ detail.food.foodName }}*{{ detail.quantity }}</p>
-            <p class="">&#165;{{ detail.food.foodPrice * detail.quantity }}</p>
-          </li>
-          <li class="w-full box-border py-[1vw] px-[4vw] text-[#666666FF] text-xl flex justify-between items-center">
-            <p class="">配送费</p>
-            <p class="">&#165;{{ order.businessVo ? order.businessVo.deliveryPrice : '' }}</p>
-          </li>
-        </ul>
+              <p class="">{{ detail.food.foodName }}*{{ detail.quantity }}</p>
+              <p class="">&#165;{{ detail.food.foodPrice * detail.quantity }}</p>
+            </li>
+            <li class="w-full box-border py-[1vw] px-[4vw] text-[#666666FF] text-xl flex justify-between items-center">
+              <p class="">配送费</p>
+              <p class="">&#165;{{ order.merchantVo ? order.merchantVo.deliveryPrice : '' }}</p>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <!--支付方式-->
+    <ul class="w-full">
+      <li class="w-full box-border p-[4vw] flex justify-between items-center">
+        <img class="w-[33vw] h-[8.9vw]" src="../assets/img/alipay.png" />
+        <svg :class="selectedPayment === 'alipay' ? 'text-[#38CA73FF]' : 'text-[#a1a1aa]'" height="20"
+          viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg" @click="togglePayment('alipay')">
+          <path
+            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5l1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+            fill="currentColor" />
+        </svg>
+      </li>
+      <li class="w-full box-border p-[4vw] flex justify-between items-center">
+        <img class="w-[33vw] h-[8.9vw]" src="../assets/img/wechat.png" />
+        <svg :class="selectedPayment === 'wechat' ? 'text-[#38CA73FF]' : 'text-[#a1a1aa]'" height="20"
+          viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg" @click="togglePayment('wechat')">
+          <path
+            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5l1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+            fill="currentColor" />
+        </svg>
       </li>
     </ul>
-  </div>
-
-  <!--支付方式-->
-  <ul class="w-full">
-    <li class="w-full box-border p-[4vw] flex justify-between items-center">
-      <img class="w-[33vw] h-[8.9vw]" src="../assets/img/alipay.png"/>
-      <svg :class="selectedPayment === 'alipay' ? 'text-[#38CA73FF]' : 'text-[#a1a1aa]'"
-           height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"
-           @click="togglePayment('alipay')">
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5l1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
-              fill="currentColor"/>
-      </svg>
-    </li>
-    <li class="w-full box-border p-[4vw] flex justify-between items-center">
-      <img class="w-[33vw] h-[8.9vw]" src="../assets/img/wechat.png"/>
-      <svg :class="selectedPayment === 'wechat' ? 'text-[#38CA73FF]' : 'text-[#a1a1aa]'"
-           height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"
-           @click="togglePayment('wechat')">
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5l1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
-              fill="currentColor"/>
-      </svg>
-    </li>
-  </ul>
-  <div v-for="order in orders"
-       :key="order.orderId" class="w-full flex-col h-30 flex box-border pt-[4vw] px-[3vw] pb-0 justify-center items-center">
-    <button class="w-full h-20 text-3xl font-bold text-white bg-[#38CA73FF] rounded-[4px] border-none outline-none"
-            @click="handlePayment(order.orderId, order.orderState)">
-      确认支付
-    </button>
-  </div>
+    <div v-for="order in orders" :key="order.orderId"
+      class="w-full flex-col h-30 flex box-border pt-[4vw] px-[3vw] pb-0 justify-center items-center">
+      <button class="w-full h-20 text-3xl font-bold text-white bg-[#38CA73FF] rounded-[4px] border-none outline-none"
+        @click="handlePayment(order.orderId, order.orderState)">
+        确认支付
+      </button>
+    </div>
   </body>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

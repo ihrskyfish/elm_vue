@@ -12,7 +12,7 @@ const app = createApp(App)
 axios.defaults.baseURL = 'http://localhost:11146';
 router.beforeEach((to, from, next) => {
     const token = getToken();
-    const publicPages = ['/', '/business-list', '/business-info', '/login', '/register', 'index.html']; // 公共页面列表
+    const publicPages = ['/', '/merchant-list', '/merchant-info', '/login', '/register', 'index.html']; // 公共页面列表
     const authRequired = !publicPages.includes(to.path); // 检查是否需要身份验证
 
     if (authRequired && token == null) {

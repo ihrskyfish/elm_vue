@@ -1,4 +1,4 @@
-import {createRouter, createWebHistory} from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from "@/views/HomePage.vue";
 
 const router = createRouter({
@@ -10,21 +10,21 @@ const router = createRouter({
             component: HomePage
         },
         {
-            path: '/business-info/:businessId',
-            name: 'BusinessInfo',
-            component: () => import('../views/BusinessInfo.vue'),
-            meta: {hideFooter: true} // 添加元信息，用于判断是否显示底部导航
+            path: '/merchant-info/:merchantId',
+            name: 'MerchantInfo',
+            component: () => import('../views/MerchantInfo.vue'),
+            meta: { hideFooter: true } // 添加元信息，用于判断是否显示底部导航
         },
         {
-            path: '/business-list',
-            name: 'BusinessList',
-            component: () => import('../views/BusinessList.vue')
+            path: '/merchant-list',
+            name: 'MerchantList',
+            component: () => import('../views/MerchantList.vue')
         },
         {
             path: '/order/:orderId',
             name: 'Order',
             component: () => import('../views/Order.vue'),
-            meta: {hideFooter: true} // 添加元信息，用于判断是否显示底部导航
+            meta: { hideFooter: true } // 添加元信息，用于判断是否显示底部导航
         },
         {
             path: '/order-list',
@@ -58,14 +58,14 @@ const router = createRouter({
         },
         {
             path: '/bussiness-type/:typeId',
-            name: 'BusinessType',
-            component: () => import('../views/BusinessTypeList.vue'),
+            name: 'MerchantType',
+            component: () => import('../views/MerchantTypeList.vue'),
         },
 
     ],
     scrollBehavior() {
         // 总是滚动到顶部
-        return {top: 0}
+        return { top: 0 }
     }
 })
 
