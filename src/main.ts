@@ -3,8 +3,8 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import './assets/global.css'
+import './assets/output.css'
 import '../node_modules/font-awesome/css/font-awesome.min.css'
-// import '../dist/output.css'
 import axios from "axios";
 import { getToken } from "@/authService";
 
