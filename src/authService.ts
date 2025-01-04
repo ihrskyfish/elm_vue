@@ -1,10 +1,10 @@
-import {ref} from 'vue';
+import { ref } from 'vue';
 import * as CryptoJS from 'crypto-js';
 import axios from 'axios';
 // Function to get AES key
-export const getRsaPublicKey = async ()=> {
+export const getRsaPublicKey = async () => {
     try {
-        const response = await axios.get('http://localhost:1145/api/user/rsa-pks');
+        const response = await axios.get('http://localhost:11146/api/user/rsa-pks');
         if (response.data.code === 200) {
             return response.data.data;
         } else {

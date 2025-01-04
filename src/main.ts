@@ -1,15 +1,15 @@
 import './assets/index.css'
-import {createApp} from 'vue'
+import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import './assets/global.css'
 import '../node_modules/font-awesome/css/font-awesome.min.css'
 // import '../dist/output.css'
 import axios from "axios";
-import {getToken} from "@/authService"; 
+import { getToken } from "@/authService";
 
 const app = createApp(App)
-axios.defaults.baseURL = 'http://localhost:1145';
+axios.defaults.baseURL = 'http://localhost:11146';
 router.beforeEach((to, from, next) => {
     const token = getToken();
     const publicPages = ['/', '/business-list', '/business-info', '/login', '/register', 'index.html']; // 公共页面列表
