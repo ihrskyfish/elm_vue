@@ -4,9 +4,9 @@ import App from './App.vue'
 import router from './router'
 import './assets/global.css'
 import '../node_modules/font-awesome/css/font-awesome.min.css'
-import '../dist/output.css'
+// import '../dist/output.css'
 import axios from "axios";
-import {getToken} from "@/authService";
+import {getToken} from "@/authService"; 
 
 const app = createApp(App)
 axios.defaults.baseURL = 'http://localhost:1145';
