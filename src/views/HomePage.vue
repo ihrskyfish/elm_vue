@@ -33,6 +33,17 @@ onMounted(async () => {
 
   <body>
     <div class="wrapper">
+      <!--搜索栏部分-->
+      <div class="search">
+        <div id="fixedBox" class="search-fixed-top">
+          <div class="search-panel">
+            <i class="fa fa-search" style="flex: 0 0 15px;padding-left: 10px"></i>
+            <input placeholder="请输入你要查询的商品" style="flex: 6;outline: none;border: none;color: #9f9f9f ;font-size: 4vw"
+              type="search">
+            <div class="search-button" style="flex: 0 0 16vw">搜索</div>
+          </div>
+        </div>
+      </div>
       <!--header部分-->
       <header>
         <div class="icon-location-box">
@@ -46,17 +57,6 @@ onMounted(async () => {
           </div>
         </div>
       </header>
-      <!--搜索栏部分-->
-      <div class="search">
-        <div id="fixedBox" class="search-fixed-top">
-          <div class="search-panel">
-            <i class="fa fa-search" style="flex: 0 0 15px;padding-left: 10px"></i>
-            <input placeholder="请输入你要查询的商品" style="flex: 6;outline: none;border: none;color: #9f9f9f ;font-size: 4vw"
-              type="search">
-            <div class="search-button" style="flex: 0 0 16vw">搜索</div>
-          </div>
-        </div>
-      </div>
       <!--种类列表部分-->
       <div class="food-type">
         <div class="food-type-item">

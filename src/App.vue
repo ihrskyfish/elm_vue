@@ -4,8 +4,8 @@ import Router from "@/components/Router.vue";
 </script>
 
 <template>
-  <RouterView/>
   <router v-if="!$route.meta.hideFooter"/>
+  <RouterView/>
 </template>
 
 <style scoped>
