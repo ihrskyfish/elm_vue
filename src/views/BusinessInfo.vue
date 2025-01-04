@@ -17,6 +17,18 @@ interface Business {
   starPrice: number;
 }
 
+interface Merchant {
+  merchantAddress: string;
+  merchantExplain: string;
+  merchantId: number;
+  merchantImg: string;
+  merchantName: string;
+  deliveryPrice: number;
+  orderTypeId: number;
+  remarks: string;
+  starPrice: number;
+}
+
 interface CartItem {
   businessId: number;
   cartId: number;
