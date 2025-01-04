@@ -9,7 +9,7 @@ html,body{
 }
 a{
     text-decoration: none;
-    color: #6c1fc4;
+    color: #000;
 }
 ol, ul {
     list-style: none;
@@ -20,7 +20,7 @@ ol, ul {
     width: 100%;
     height: 100%;
     border-radius: 50% 50% 50% 0;
-    background: #cc2394;
+    background: #fff;
     transform: rotate(-45deg);
 }
 .icon-location:after {
@@ -37,7 +37,7 @@ ol, ul {
 }
 .bannerText{
     font-size: 3.4vw;
-    color: #6ca31e;
+    color: #666;
 }
 .linkText{
     font-size: 3vw;
@@ -52,10 +52,10 @@ ol, ul {
     justify-content: space-around;
     align-items: center;
     position: fixed;
-    border-top: 1px solid #ea1212;
+    border-top: 1px solid #ccc;
     bottom: 0;
     left: 0;
-    background: #119f45;
+    background: #ffffff;
 }
 
 .wrapper .footer div {
